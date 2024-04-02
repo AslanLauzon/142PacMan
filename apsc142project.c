@@ -47,8 +47,12 @@ int main(void) {
     if (map == NULL) //If the map is not findable
         return ERR_NO_MAP;
     setbuf(stdout, NULL);
+    //Creating the dot map
+    dot_map = load_dotMap(pHeight, pWidth);
 
-
+    for (int i = 0; i < 120; i++){
+        printf("%c", dot_map[i]);
+    }
     return NO_ERROR;
 
 }

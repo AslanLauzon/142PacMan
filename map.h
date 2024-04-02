@@ -41,7 +41,7 @@
  * @return A pointer to the loaded map, or NULL on error
  */
 char * load_map(char * filename, int * map_height, int *map_width);
-
+char * load_dotMap(int *map_height, int *map_width);
 #define NOT_WALL 0
 #define YES_WALL 1
 /**
@@ -64,9 +64,6 @@ int is_wall(int y, int x);
 #define MOVED_INVALID_DIRECTION 2
 #define REPLACE_DOTS 0
 #define EAT_DOTS 1
-
-
-
 /**
  * Try to move an actor at the given coordinates, respecting walls and
  * updating the map to replace a dot if required.
