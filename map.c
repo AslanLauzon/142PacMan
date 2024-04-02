@@ -100,3 +100,15 @@ char * load_dotMap(int *map_height, int *map_width){
     }
     return pMap;
 }
+
+int printMap(int *map_height, int *map_width, int getDots){
+    int dots = 0;
+    for (int i = 0; i < (*map_height+2)*(*map_width+2); i++){
+        printf("%c ", map[i]);
+        if (getDots == 1 && map[i] == '.')
+            dots++;
+        if ((i+1)%11==0)
+            printf("\n");
+    }
+    return dots;
+}
