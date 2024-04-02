@@ -16,13 +16,15 @@
 #include "game.h"
 #include "ghost.h"
 
+
+
 // These global variables must be used to store map information.
 // Almost every function needs these variables, so keeping them as globals helps keep things organized.
 // map is a pointer to a dynamically allocated map for displaying to the user
 // dot_map is a pointer to a dynamically allocated map for keeping track of what dots are left
 char *map = NULL, *dot_map = NULL;
 // width and height store the width and height of map, NOT counting outer walls
-int width, height;
+int width = 9, height = 9;
 
 
 
@@ -39,20 +41,12 @@ int width, height;
  * @return a status code
  */
 int main(void) {
-    int height = 9;
-    int weight = 9;
-    int *pHeight =  &weight;
+    int *pHeight =  &width;
     int *pWidth = &height;
+    map = load_map("map.txt", pHeight, pWidth);
+    if (map == NULL) //If the map is not findable
+        return ERR_NO_MAP;
     setbuf(stdout, NULL);
-    char *testMap = load_map("map.txt", pHeight, pWidth);
-//    for (int i = 0; i < (100); i++){
-//        printf("%c", testMap[i]);
-//        if (i%10 == 0)
-//            printf("\n");
-//    }
-
-
-    printf("%s \n\n",is_wall(1,0));
 
 
     return NO_ERROR;
