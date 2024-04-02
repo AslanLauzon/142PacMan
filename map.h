@@ -65,6 +65,7 @@ int is_wall(int y, int x);
 #define REPLACE_DOTS 0
 #define EAT_DOTS 1
 /**
+
  * Try to move an actor at the given coordinates, respecting walls and
  * updating the map to replace a dot if required.
  * This function is passed the coordinates of an "actor", where that
@@ -91,7 +92,12 @@ int is_wall(int y, int x);
  * @param eat_dots Whether or not to update the map from the dot map
  * @return A status code depending on the result of the function
  */
+int cordIdxCvt (int x,int y);
 int move_actor(int * y, int * x, char direction, int eat_dots);
+
+
+
+
 
 /** Other function prototypes can go below here **/
 

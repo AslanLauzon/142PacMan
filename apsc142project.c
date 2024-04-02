@@ -50,6 +50,9 @@ int main(void) {
     //Creating the dot map
     dot_map = load_dotMap(pHeight, pWidth);
 
+    printf("%d",is_wall(1,0));
+
+
     for (int i = 0; i < 120; i++){
         printf("%c", dot_map[i]);
     }
