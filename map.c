@@ -58,7 +58,7 @@ char * load_map(char * filename, int *map_height, int *map_width) {
     for (int i = 1; i < (*map_height+1); i++){
         //Loading the map
         pMap[(i-1)*(*map_height+2)+*map_height+2]= 'W'; //Creating the left most wall
-        printf("%d? ", ((i-1)*(*map_height+2)+*map_height+2)); //Index testing
+        //printf("%d? ", ((i-1)*(*map_height+2)+*map_height+2)); //Index testing
       //printf("%c ", pMap[i*(*map_height)]); //test
         for (int j = 1; j < *map_width+1; j++){
             fscanf(fMap, "%c", &pHold[0]); // Getting the value from the with a holding value
@@ -72,16 +72,13 @@ char * load_map(char * filename, int *map_height, int *map_width) {
             else{
                 pMap[i*(*map_height+2)+j] = pHold[0]; //If the hold passes the condition, pMap can be made that
             }
-            printf("%d* ", (i*(*map_height+2)+j)); //Index test
+           // printf("%d* ", (i*(*map_height+2)+j)); //Index test
 
            //printf("%c ", pMap[i*(*map_height)+j]); //test
         } //Goes through 9 reps
         pMap[i*(*map_height+2)+*map_width+1]= 'W'; //Adding the right most wall
-        printf("%d\n", (i*(*map_height+2)+*map_width+1)); //Index test
-       //printf("%c\n", pMap[i*(*map_height)+*map_width+1]); //test
+
     }
-//    for (int i = 0; i < 11; i++){ //test
-//        printf("%c ", pMap[(*map_width+2)*(*map_height+2)+i]);
-//    }
+
     return pMap;
 }
