@@ -1,4 +1,4 @@
-/Users/logancalder/Documents/Queens/Semester 2/APSC 142/Final Pacman Project/Pacman_Game/cmake-build-debug/CMakeFiles/project.dir
-/Users/logancalder/Documents/Queens/Semester 2/APSC 142/Final Pacman Project/Pacman_Game/cmake-build-debug/CMakeFiles/tests.dir
-/Users/logancalder/Documents/Queens/Semester 2/APSC 142/Final Pacman Project/Pacman_Game/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/logancalder/Documents/Queens/Semester 2/APSC 142/Final Pacman Project/Pacman_Game/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/Owner/CLionProjects/142PacMan/cmake-build-debug/CMakeFiles/project.dir
+C:/Users/Owner/CLionProjects/142PacMan/cmake-build-debug/CMakeFiles/tests.dir
+C:/Users/Owner/CLionProjects/142PacMan/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Owner/CLionProjects/142PacMan/cmake-build-debug/CMakeFiles/rebuild_cache.dir

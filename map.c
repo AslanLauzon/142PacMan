@@ -17,7 +17,23 @@ int move_actor(int * y, int * x, char direction, int eat_dots) {
 }
 
 int is_wall(int y, int x) {
-    return NOT_WALL;
+
+    int height = 9;
+    int weight = 9;
+    int index = y * 11 + (x - 1);
+    int *pHeight = &weight;
+    int *pWidth = &height;
+
+    char *Map = load_map("map.txt", pHeight, pWidth);
+    printf("\n\n");
+
+    if (map[index] == 'W') {
+        free(Map);
+        return WALL;
+    } else {
+        free(Map);
+        return NOT_WALL;
+    }
 }
 
 char * load_map(char * filename, int *map_height, int *map_width) {
@@ -77,7 +93,9 @@ char * load_map(char * filename, int *map_height, int *map_width) {
        printf("%c\n", pMap[i*(*map_height)+*map_width+1]); //test
     }
     for (int i = 0; i < 11; i++){ //test
+
         printf("%c ", pMap[(*map_width+1)*(*map_height+1)+i]);
     }
     return pMap;
 }
+

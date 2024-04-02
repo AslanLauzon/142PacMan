@@ -51,6 +51,10 @@ int main(void) {
 //            printf("\n");
 //    }
 
+
+    printf("%s \n\n",is_wall(1,0));
+
+
     return NO_ERROR;
 
 }

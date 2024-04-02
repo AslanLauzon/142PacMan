@@ -64,6 +64,9 @@ int is_wall(int y, int x);
 #define MOVED_INVALID_DIRECTION 2
 #define REPLACE_DOTS 0
 #define EAT_DOTS 1
+
+
+
 /**
  * Try to move an actor at the given coordinates, respecting walls and
  * updating the map to replace a dot if required.
