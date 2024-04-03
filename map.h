@@ -94,6 +94,9 @@ int is_wall(int y, int x);
  */
 int cordIdxCvt (int x,int y);
 int move_actor(int * y, int * x, char direction, int eat_dots);
+void printMap(int *map_height, int *map_width);
+int initalDotCount (int *map_height, int *map_width);
+int validMovement (int x, int y, char direction);
 
 
 

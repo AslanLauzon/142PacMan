@@ -29,6 +29,7 @@
  *         Otherwise, a status code.
  */
 char sees_pacman(int pacman_y, int pacman_x, int ghost_y, int ghost_x);
+char moveGhost (int pacman_y, int pacman_x, int ghost_y, int ghost_x);
 
 /** Other function prototypes can go below here **/
 

@@ -10,11 +10,10 @@
 
 
 extern char *map, *dot_map;
-extern int width, height;
+extern int width, height, dotCount;
 
-//Determining the validity of movement
 int validMovement (int x, int y, char direction){
-    switch (direction){ //Changing the coordinate depending on the type of movement required
+    switch (direction){ //Changing the coordinate depending on the type of movement require3d
         case UP:
             y--;
             break;
@@ -35,83 +34,96 @@ int validMovement (int x, int y, char direction){
 
 int cordIdxCvt (int x,int y){
 
-    return (y * 11 + (x - 1));
+    return (y * 9 + (x));
 }
 
-int move_actor(int * y, int * x, char direction, int eat_dots){
+int move_actor(int *y, int *x, char direction, int eat_dots){
 
-    //declearing variables, includes converted x and y cords into an idx and the direction vector and the new cords after movement
-    int actorIdx = cordIdxCvt((int) x, (int) y);
-    int dirVector;
+    //declaring variables, includes converted x and y cords into an idx and the direction vector and the new cords after movement
+    int actorIdx = cordIdxCvt(*x, *y);
+    printf("\nORIGINAL IDX:%d", actorIdx);
     int newActorCords;
     int tempX;
     int tempY;
 
     //converting direction to int values
-    switch (direction) {
+    switch(direction) {
         case UP:
-            dirVector = -11;
-            tempY = (int) (y) -1;
-            tempX = (int) x;
+            // Move up means decrement the Y value
+            tempY = *y - 1;
+            tempX = *x;
             break;
         case DOWN:
-            dirVector = 11;
-            tempX = (int) x;
-            tempY = (int) (y) +1;
+            // Move down means increment the Y value
+            tempY = *y + 1;
+            tempX = *x;
             break;
         case RIGHT:
-            dirVector = 1;
-            tempY = (int) y;
-            tempX = (int) x +1;
+            // Move right means increment the X value
+            tempX = *x + 1;
+            tempY = *y;
             break;
         case LEFT:
-            dirVector = -1;
-            tempY = (int) y;
-            tempX = (int) x -11;
+            // Move left means decrement the X value
+            tempX = *x - 1;
+            tempY = *y;
             break;
         default:
             //  Handle any unexpected direction values
-            break;
+            return MOVED_INVALID_DIRECTION;
     }
 
+
+    if (eat_dots == 0) {
+        printf("\nTEMP VALUES %d %d\nWALL VALUE:%d\n", tempX, tempY,is_wall(tempX,tempY));
+
+    }
+    fflush(stdout);
     //checks if new position is a wall
     if (is_wall(tempX,tempY)){
         return MOVED_WALL;
     }
 
         //if it is a valid position (contains no walls) then it moves the actor and updates all the corresponding variables.
-    else {
-        if (eat_dots == 1 && dot_map[actorIdx] == '.') {
-            dot_map[actorIdx] = ' ';
 
+    if (eat_dots == 1 && dot_map[actorIdx] == '.') {
+        dot_map[actorIdx] = ' ';
+        dotCount--;
 
-        }
-        map[actorIdx] = dot_map[actorIdx];
-        newActorCords = cordIdxCvt(tempX, tempY);
-
-        if (eat_dots == 1)
-            map[newActorCords] = 'P';
-        else if (eat_dots == 0)
-            map[newActorCords] = 'G';
-
-        y = &tempY;
-        x = &tempX;
-
-        return MOVED_OKAY;
     }
+    map[actorIdx] = dot_map[actorIdx];
+    printf("\nNEW CORDS (%d, %d) IDX: %d", tempX, tempY,cordIdxCvt(tempX, tempY));
+    newActorCords = cordIdxCvt(tempX, tempY);
+
+    if (eat_dots == 1)
+        map[newActorCords] = 'P';
+    else if (eat_dots == 0)
+        map[newActorCords] = 'G';
+
+    *y = tempY;
+    *x = tempX;
+
+    return MOVED_OKAY;
+
 }
 
 
-int is_wall(int y, int x) {
+int is_wall(int x, int y) {
 
-    int index = y * 9 + (x - 1);
+    int validMove;
+    int idx = cordIdxCvt(x,y);
+    if (x >= 0 && x < 9 && y < 9 && y >= 0)
+        validMove = 1;
+    else
+        validMove = 0;
 
-
-    if (map[index] == 'W') {
+    if (map[cordIdxCvt(x,y)] == 'W'|| validMove == 0) {
         return 1;
-    } else {
+
+
+    } else
         return 0;
-    }
+
 }
 
 char * load_map(char * filename, int *map_height, int *map_width) {
@@ -195,7 +207,8 @@ char * load_dotMap(int *map_height, int *map_width){
     return pMap;
 }
 
-int printMap(int *map_height, int *map_width, int getDots){
+
+void printMap(int *map_height, int *map_width){
     int dots = 0;
     int level = -1;
     for (int i = 0; i < (*map_height+2)*(*map_width+2); i++){
@@ -210,11 +223,17 @@ int printMap(int *map_height, int *map_width, int getDots){
         else{
             printf("%c ", map[i-(width+3)-2*level]);
         }
-
-
-        if (getDots == 1 && map[i] == '.')
-            dots++;
-
     }
-    return dots;
+}
+
+int initalDotCount (int *map_height, int *map_width){
+    int count = 0;
+
+    for (int x = 0; x < *map_height**map_width; x++)
+
+        if (dot_map[x] == '.'){
+            count++;
+        }
+    //printf("COUINT %d", count);
+    return  count;
 }
