@@ -12,8 +12,9 @@
 extern char *map, *dot_map;
 extern int width, height;
 
+//Determining the validity of movement
 int validMovement (int x, int y, char direction){
-    switch (direction){ //Changing the coordinate depending on the type of movement require3d
+    switch (direction){ //Changing the coordinate depending on the type of movement required
         case UP:
             y--;
             break;
