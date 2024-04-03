@@ -2,6 +2,7 @@
 // Copyright Sean Kauffman 2024
 
 #include "defines.h"
+#include <stdlib.h>
 #include "ghost.h"
 #include "map.h"
 
@@ -47,4 +48,27 @@ char sees_pacman(int pacman_y, int pacman_x, int ghost_y, int ghost_x) {
     }
 
     return SEES_NOTHING;
+}
+
+//Moving the ghost
+char moveGhost (int pacman_y, int pacman_x, int ghost_y, int ghost_x){
+    char dirns [] = {UP, DOWN, LEFT, RIGHT}; //Array of possible directions
+    char* validDirns; //Array for the final valid directions
+    char motion = sees_pacman(pacman_y, pacman_x, ghost_y, ghost_x); //If the motion is already decided by seeing packman
+    int direction; //Will hold the random direction
+    int count = 0; //Number of allowable directions
+    if (motion == 0){
+        for (int i = 0; i < 4; i++){
+            if (validMovement(ghost_y, ghost_x, dirns[i])==0){ //If the direction is valid
+                count++;
+                //Adding it to the valid directions
+                validDirns = realloc(validDirns, count * sizeof(int));
+                validDirns[count-1] = dirns[i];
+            }
+        }
+        //Taking a random number between 0 and the max amount of valid directions
+        direction = rand() % count;
+        return validDirns[direction];
+    }
+    return motion;
 }
