@@ -12,6 +12,26 @@
 extern char *map, *dot_map;
 extern int width, height;
 
+int validMovement (int x, int y, char direction){
+    switch (direction){ //Changing the coordinate depending on the type of movement require3d
+        case UP:
+            y--;
+            break;
+        case DOWN:
+            y++;
+            break;
+        case LEFT:
+            x--;
+            break;
+        case RIGHT:
+            x++;
+            break;
+    }
+    if (x >= 0 && x < 9 && y < 9 && y >= 0) //motion is valid
+        return 0;
+    return 1; // The motion is invalid
+}
+
 int cordIdxCvt (int x,int y){
 
     return (y * 11 + (x - 1));
@@ -83,7 +103,7 @@ int move_actor(int * y, int * x, char direction, int eat_dots){
 
 int is_wall(int y, int x) {
 
-    int index = y * 11 + (x - 1);
+    int index = y * 9 + (x - 1);
 
 
     if (map[index] == 'W') {
