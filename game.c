@@ -8,7 +8,7 @@
 extern char * map, * dot_map;
 extern int height;
 extern int width;
-extern int dotCount;
+int dotCount;
 
 //Checking if pacman has won
 int check_win(int pacman_y, int pacman_x, int ghosts_y[NUM_GHOSTS], int ghosts_x[NUM_GHOSTS]) {
