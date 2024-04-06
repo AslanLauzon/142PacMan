@@ -24,7 +24,8 @@
 // dot_map is a pointer to a dynamically allocated map for keeping track of what dots are left
 char *map = NULL, *dot_map = NULL;
 // width and height store the width and height of map, NOT counting outer walls
-int width = 9, height = 9, dotCount;
+int width = 9, height = 9;
+extern int dotCount;
 
 
 
@@ -44,73 +45,75 @@ int width = 9, height = 9, dotCount;
 int main(void) {
     int *pHeight =  &width;
     int *pWidth = &height;
-    char input;
-    int dots;
-    int result;
+    char input, direction;
+    int mveactrresult;
+    int  result [2];
 
     //tracking variables
-    int  pacman_x, pacman_y;
-    pacman_x = 4;
-    pacman_y = 4;
-    char direction;
-
-    int pacman[2] = {4,4};
-
-    int ghosts_y[NUM_GHOSTS] = {0,8};
-    int ghosts_x[NUM_GHOSTS] = {0,8};
-
+    int  pacman_x = 0, pacman_y = 0;
+    int ghosts_y[NUM_GHOSTS], ghosts_x[NUM_GHOSTS];
 
 
     map = load_map("map.txt", pHeight, pWidth);
+    if (map == NULL) //If the map is not findable
+        return ERR_NO_MAP;
     dot_map = load_dotMap(pHeight, pWidth);
     dotCount = initalDotCount(pHeight, pWidth);
 
-    if (map == NULL) //If the map is not findable
-        return ERR_NO_MAP;
     setbuf(stdout, NULL);
     //Creating the dot map
 
+    //Getting
+    int* cords = getCoords (PACMAN, 0); //Getting pacman coordinates
+    if (cords == NULL) //If pacman can't be found
+        return ERR_NO_PACMAN;
+    pacman_x = cords[0],pacman_y = cords[1]; //getting pacman
+    for (int i = 0; i < 2; i++){
+        cords = getCoords (GHOST, i); //Getting the ghost's coords
+        if (cords == NULL) //If no ghosts can be found
+            return ERR_NO_GHOSTS;
+        ghosts_x[i] = cords[0], ghosts_y[i] = cords[1]; //Inputing them
 
+    }
+    free(cords);
     //change to loss condition
 
+    //Initial map print
+    printMap(pHeight, pWidth);
 
     do{
+
+        input = getch();
+        //int tempPacCord[] = {pacman_x, pacman_y};
+        mveactrresult = move_actor(&pacman_y,&pacman_x,input,1);
+        if (mveactrresult ==2)
+            continue;
+        //printf("dots %d", dotCount);
+
+        //check win condition
         if (check_win(pacman_y,pacman_x,ghosts_y,ghosts_x)){
             break;
         }
-        printMap(pHeight, pWidth);
-        input = getch();
-        printf("\nPACMAN CORDS: (%d,%d)", pacman_x,pacman_y);
 
-
-        int mveactrresult = move_actor(&pacman_y,&pacman_x,input,1);
-//        printf("\nWall Result: %d", mveactrresult);
-//        printf("\nGLOBAL PACMAN CORDS: (%d,%d)", pacman_x,pacman_y);
-//        printf("LOSS CONDITION RETURNS:%d", check_loss(pacman_y,pacman_x,ghosts_y,ghosts_x));
-        printf("\nGHOST LOCATION\nGHOST ONE (%d,%d) GHOST TWO (%d,%d)", ghosts_y[0], ghosts_x[1],ghosts_x[1], ghosts_y[1]);
-        printf("\nDOTCOUNT: %d", dotCount);
-
-
-
-        direction = moveGhost(pacman_y,pacman_x,ghosts_y[1], ghosts_x[1]);
-        printf("\ndirection: %c", direction);
-        result = move_actor(&ghosts_y[1], &ghosts_x[1], direction, 0);
-
-        direction = moveGhost(pacman_y,pacman_x,ghosts_y[0], ghosts_x[0]);
-        printf("\ndirection: %c", direction);
-        result = move_actor(&ghosts_y[0], &ghosts_x[0], direction, 0);
-
-        printf("MOVE ACTOR RESULT: %d", result);
-        printf("\n\n\n\n");
-
+        for (int i = 0; i < NUM_GHOSTS; i++){
+            direction = moveGhost(pacman_y, pacman_x,ghosts_y[i], ghosts_x[i]);
+            result[i] = move_actor(&ghosts_y[i], &ghosts_x[i], direction, 0);
+        }
 
         //check win condition
+        if (check_win(pacman_y,pacman_x,ghosts_y,ghosts_x)){
+            break;
+        }
 
-
+        //Printing the resulting map
+        printMap(pHeight, pWidth);
 
 
 
     }while (!check_loss(pacman_y,pacman_x,ghosts_y,ghosts_x));
+
+    free(map);
+    free(dot_map);
 
     return NO_ERROR;
 }

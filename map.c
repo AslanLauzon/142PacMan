@@ -12,25 +12,7 @@
 extern char *map, *dot_map;
 extern int width, height, dotCount;
 
-int validMovement (int x, int y, char direction){
-    switch (direction){ //Changing the coordinate depending on the type of movement require3d
-        case UP:
-            y--;
-            break;
-        case DOWN:
-            y++;
-            break;
-        case LEFT:
-            x--;
-            break;
-        case RIGHT:
-            x++;
-            break;
-    }
-    if (x >= 0 && x < 9 && y < 9 && y >= 0) //motion is valid
-        return 0;
-    return 1; // The motion is invalid
-}
+
 
 int cordIdxCvt (int x,int y){
 
@@ -41,7 +23,7 @@ int move_actor(int *y, int *x, char direction, int eat_dots){
 
     //declaring variables, includes converted x and y cords into an idx and the direction vector and the new cords after movement
     int actorIdx = cordIdxCvt(*x, *y);
-    printf("\nORIGINAL IDX:%d", actorIdx);
+    //printf("\nORIGINAL IDX:%d", actorIdx);
     int newActorCords;
     int tempX;
     int tempY;
@@ -74,10 +56,10 @@ int move_actor(int *y, int *x, char direction, int eat_dots){
     }
 
 
-    if (eat_dots == 0) {
-        printf("\nTEMP VALUES %d %d\nWALL VALUE:%d\n", tempX, tempY,is_wall(tempX,tempY));
-
-    }
+//    if (eat_dots == 0) {
+//        //printf("\nTEMP VALUES %d %d\nWALL VALUE:%d\n", tempX, tempY,is_wall(tempX,tempY));
+//
+//    }
     fflush(stdout);
     //checks if new position is a wall
     if (is_wall(tempX,tempY)){
@@ -89,10 +71,10 @@ int move_actor(int *y, int *x, char direction, int eat_dots){
     if (eat_dots == 1 && dot_map[actorIdx] == '.') {
         dot_map[actorIdx] = ' ';
         dotCount--;
-
+        printf("In function %d", dotCount);
     }
     map[actorIdx] = dot_map[actorIdx];
-    printf("\nNEW CORDS (%d, %d) IDX: %d", tempX, tempY,cordIdxCvt(tempX, tempY));
+    //printf("\nNEW CORDS (%d, %d) IDX: %d", tempX, tempY,cordIdxCvt(tempX, tempY));
     newActorCords = cordIdxCvt(tempX, tempY);
 
     if (eat_dots == 1)
@@ -117,12 +99,32 @@ int is_wall(int x, int y) {
     else
         validMove = 0;
 
-    if (map[cordIdxCvt(x,y)] == 'W'|| validMove == 0) {
+    if (map[cordIdxCvt(x,y)] == WALL || validMove == 0) {
+
         return 1;
 
 
     } else
         return 0;
+
+}
+
+int validMovement (int x, int y, char direction){
+    switch (direction){ //Changing the coordinate depending on the type of movement require3d
+        case UP:
+            y--;
+            break;
+        case DOWN:
+            y++;
+            break;
+        case LEFT:
+            x--;
+            break;
+        case RIGHT:
+            x++;
+            break;
+    }
+    return is_wall(x, y);
 
 }
 
@@ -139,7 +141,7 @@ char * load_map(char * filename, int *map_height, int *map_width) {
     }
 
     //Creating the holding and map points
-    char * pMap = (char*) malloc((*map_width)*(*map_height)*sizeof(char*));
+    char * pMap = (char*) malloc((width)*(height)*sizeof(char*));
     char * pHold = (char*) malloc(sizeof(char*));
     if (pMap == NULL || pHold == NULL) { //If there is no memory to allocate them to
         //message to the user
@@ -150,43 +152,32 @@ char * load_map(char * filename, int *map_height, int *map_width) {
         free(pHold);
         return NULL; //indicating error has occured
     }
-    //Creating the top and bottom row of the map
-//    for (int i = 0; i < *map_width+2; i++){
-//        pMap[i]='W';
-//        //index++;
-//        pMap[(*map_width+1)*(*map_height+2)+i]='W';
-//        //printf("%c ", pMap[i]); //test
-//    }
-   //printf("\n"); //test
-   //printf("%d!\n", index); //Index testing
+
 
     //Getting the real map
     for (int i = 0; i < (*map_height); i++){
         //Loading the map
-//        pMap[(i-1)*(*map_height+2)+*map_height+2]= 'W'; //Creating the left most wall
-        //printf("%d? ", ((i-1)*(*map_height+2)+*map_height+2)); //Index testing
-      //printf("%c ", pMap[i*(*map_height)]); //test
+//
         for (int j = 0; j < *map_width; j++){
             fscanf(fMap, "%c", &pHold[0]); // Getting the value from the with a holding value
+            if (i*height+j >= width*height)
+                return NULL;
             if (pHold[0]== '\n'){
-                fscanf(fMap, "%c", &pMap[i*(*map_height)+j]); //The next value will be valid and can be taken
+                fscanf(fMap, "%c", &pMap[i*height+j]); //The next value will be valid and can be taken
             }
             else if (pHold[0]==' '){
                 fscanf(fMap, "%c", &pHold[0]); //Spaces will be in twos therefor second must be taken
-                fscanf(fMap, "%c", &pMap[i*(*map_height)+j]); //This will be valid
+                fscanf(fMap, "%c", &pMap[i*(height)+j]); //This will be valid
             }
             else{
-                pMap[i*(*map_height)+j] = pHold[0]; //If the hold passes the condition, pMap can be made that
+                pMap[i*(height)+j] = pHold[0]; //If the hold passes the condition, pMap can be made that
             }
 
-           // printf("%d* ", (i*(*map_height+2)+j)); //Index test
-
-           //printf("%c ", pMap[i*(*map_height)+j]); //test
         } //Goes through 9 reps
-//        pMap[i*(*map_height+2)+*map_width+1]= 'W'; //Adding the right most wall
 
     }
-
+    *map_width = width;
+    *map_height = height;
     return pMap;
 }
 char * load_dotMap(int *map_height, int *map_width){
@@ -200,7 +191,7 @@ char * load_dotMap(int *map_height, int *map_width){
     }
     for (int i = 0; i < (height)*(width);i++){
         if (map[i] == 'P' || map[i] == 'G')
-            pMap[i] = ' ';
+            pMap[i] = EMPTY;
         else
             pMap[i]=map[i];
     }
@@ -209,21 +200,40 @@ char * load_dotMap(int *map_height, int *map_width){
 
 
 void printMap(int *map_height, int *map_width){
-    int dots = 0;
     int level = -1;
     for (int i = 0; i < (*map_height+2)*(*map_width+2); i++){
-        if (i < *map_width+1 || (*map_width+2)*(*map_height+1)< i)
+        if (i < *map_width+1 || (*map_width+2)*(*map_height+1)< i){
+            change_text_colour(BLUE);
             printf("W ");
-        else if ((i+1)%11==0){
+        }
+        else if ((i+1)%(width+2)==0){
+            change_text_colour(BLUE);
             printf("W\n");
             level++;
         }
-        else if (i % (*map_width+2)==0)
+        else if (i % (*map_width+2)==0){
+            change_text_colour(BLUE);
             printf("W ");
+        }
         else{
-            printf("%c ", map[i-(width+3)-2*level]);
+            switch (map[i-(width+3)-2*level]) { //Changing the colour based on what needed to be printed
+                case WALL:
+                    change_text_colour(BLUE);
+                    break;
+                case PACMAN:
+                    change_text_colour(YELLOW);
+                    break;
+                case GHOST:
+                    change_text_colour(PINK);
+                    break;
+                case DOT:
+                    change_text_colour(WHITE);
+                    break;
+            }
+            printf("%c ", map[i-(width+3)-2*level]); //Printing the map value
         }
     }
+    printf("\n");
 }
 
 int initalDotCount (int *map_height, int *map_width){
@@ -236,4 +246,27 @@ int initalDotCount (int *map_height, int *map_width){
         }
     //printf("COUINT %d", count);
     return  count;
+}
+
+int * getCoords (char type, int number){ //Number opperates from 0-n
+    int unit_x = 0, unit_y =0, count = 0;
+    int * cords = (int*) malloc(2*sizeof (int*)); //Array to store the coordinates of the object
+    for (int i = 0; i < height*width; i++){
+        if (map[unit_y*width+unit_x] == type){
+            if (count == number){
+                cords[0] = unit_x, cords[1] = unit_y;
+                return cords;
+            }
+
+            count ++;
+        }
+        unit_x ++;
+        if (unit_x == width){
+            unit_x = 0;
+            unit_y ++;
+        }
+    }
+
+    if (unit_y > 8)
+        return NULL;
 }
