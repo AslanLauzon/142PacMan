@@ -57,7 +57,7 @@ char * load_dotMap(int *map_height, int *map_width);
  * @param x The X coordinate on the map to check
  * @return NOT_WALL if the coordinate is not a wall, YES_WALL if it is
  */
-int is_wall(int y, int x);
+int is_wall(int x, int y);
 
 #define MOVED_OKAY 0
 #define MOVED_WALL 1
@@ -97,6 +97,7 @@ int move_actor(int * y, int * x, char direction, int eat_dots);
 void printMap(int *map_height, int *map_width);
 int initalDotCount (int *map_height, int *map_width);
 int validMovement (int x, int y, char direction);
+int * getCoords (char type, int number);
 
 
 
