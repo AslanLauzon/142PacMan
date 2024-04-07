@@ -160,15 +160,14 @@ char * load_map(char * filename, int *map_height, int *map_width){
         return NULL; //indicating error has occured
     }
     char ch;
-    int xCount;
+
     while((ch = fgetc(fMap)) != EOF){
         if(ch == '\n'){
-            height++; // Increment height for each new line.
-            xCount = 0; // Reset element count for the new line.
+            height++; // Increment height for each new line. // Reset element count for the new line.
         }
         else if(ch != EMPTY && height == 1) {
             width++; // Increment width for each character in the first line.
-            xCount++;
+
         }
     }
 
@@ -186,18 +185,22 @@ char * load_map(char * filename, int *map_height, int *map_width){
                 while (tempChange == 0){
 
                     fscanf(fMap, "%c", &pHold[0]); // Getting the value from the with a holding value
-                    printf("%c", pHold);
 //                    if (pHold[0]== '\n'){
 //                        fscanf(fMap, "%c", &pMap[i*height+j]); //The next value will be valid and can be taken
 //                    }
+
                     if (pHold[0] !=' ' && pHold[0] != '\n') {
                         pMap[i * (height) + j] = pHold[0]; //If the hold passes the condition, pMap can be made that
                         tempChange = 1;
                     }
                 }
-                printf("%c", pMap[i * (height) + j]);
+
             }
 
+    }
+
+    for (int i = 0; i < height*width; i++){
+        printf("%c ", pMap[i]);
     }
     *map_width = width;
     *map_height = height;
@@ -253,7 +256,8 @@ void printMap(int *map_height, int *map_width){
                     change_text_colour(WHITE);
                     break;
             }
-            printf("%c ", map[i-(width+3)-2*level]); //Printing the map value
+             //Printing the map value
+            printf("%c ", map[i-(width+3)-2*level]);
         }
     }
     printf("\n");
