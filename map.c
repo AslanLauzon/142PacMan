@@ -148,17 +148,7 @@ char * load_map(char * filename, int *map_height, int *map_width){
     }
 
     //Creating the holding and map points
-    char * pMap = (char*) malloc((width)*(height)*sizeof(char*));
-    char * pHold = (char*) malloc(sizeof(char*));
-    if (pMap == NULL || pHold == NULL) { //If there is no memory to allocate them to
-        //message to the user
-        printf("Memory is not available");
-        //Closing the file and free the space
-        fclose(fMap);
-        free(pMap);
-        free(pHold);
-        return NULL; //indicating error has occured
-    }
+    //char * pMap = (char*) malloc((width)*(height)*sizeof(char*));
     char ch;
 
     while((ch = fgetc(fMap)) != EOF){
@@ -173,37 +163,43 @@ char * load_map(char * filename, int *map_height, int *map_width){
 
     rewind(fMap);
     int tempChange;
+    char * pMap = (char*) malloc((width)*(height)*sizeof(char*));
+    char * pHold = (char*) malloc(sizeof(char*));
+    if (pMap == NULL || pHold == NULL) { //If there is no memory to allocate them to
+        //message to the user
+        printf("Memory is not available");
+        //Closing the file and free the space
+        fclose(fMap);
+        free(pMap);
+        free(pHold);
+        return NULL; //indicating error has occured
+    }
 
-
+    int count = 0;
     //Getting the real map
     for (int i = 0; i < height; i++){
         //Loading the map
-
             for (int j = 0; j < width; j++){
                 tempChange = 0;
 
                 while (tempChange == 0){
-
                     fscanf(fMap, "%c", &pHold[0]); // Getting the value from the with a holding value
-//                    if (pHold[0]== '\n'){
-//                        fscanf(fMap, "%c", &pMap[i*height+j]); //The next value will be valid and can be taken
-//                    }
-
-                    if (pHold[0] !=' ' && pHold[0] != '\n') {
-                        pMap[i * (height) + j] = pHold[0]; //If the hold passes the condition, pMap can be made that
+                    if (pHold[0] != ' ' && pHold[0] != '\n') {
+                        pMap[count] = pHold[0]; //If the hold passes the condition, pMap can be made that
+                        count++;
                         tempChange = 1;
+                        printf("%c, %d!", pMap[count-1], count-1);
                     }
                 }
-
             }
-
-    }
-
+        }
+    printf("\n");
     for (int i = 0; i < height*width; i++){
         printf("%c ", pMap[i]);
     }
     *map_width = width;
     *map_height = height;
+    fclose(fMap);
     return pMap;
 }
 char * load_dotMap(int *map_height, int *map_width){
