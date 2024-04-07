@@ -24,7 +24,7 @@
 // dot_map is a pointer to a dynamically allocated map for keeping track of what dots are left
 char *map = NULL, *dot_map = NULL;
 // width and height store the width and height of map, NOT counting outer walls
-int width = 9, height = 9;
+int width, height;
 extern int dotCount;
 
 
@@ -86,24 +86,18 @@ int main(void) {
         input = getch();
         //int tempPacCord[] = {pacman_x, pacman_y};
         mveactrresult = move_actor(&pacman_y,&pacman_x,input,1);
-        if (mveactrresult ==2)
-            continue;
-        //printf("dots %d", dotCount);
-
         //check win condition
         if (check_win(pacman_y,pacman_x,ghosts_y,ghosts_x)){
             break;
         }
+        if (mveactrresult ==2)
+            continue;
 
         for (int i = 0; i < NUM_GHOSTS; i++){
             direction = moveGhost(pacman_y, pacman_x,ghosts_y[i], ghosts_x[i]);
             result[i] = move_actor(&ghosts_y[i], &ghosts_x[i], direction, 0);
         }
 
-        //check win condition
-        if (check_win(pacman_y,pacman_x,ghosts_y,ghosts_x)){
-            break;
-        }
 
         //Printing the resulting map
         printMap(pHeight, pWidth);

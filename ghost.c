@@ -76,19 +76,18 @@ char moveGhost(int pacmanY, int pacmanX, int ghost_y, int ghost_x) {
         if (possibleDirns == NULL){
             printf("Memory is not available");
             free(possibleDirns);
-            return 'z'; //Error has occured
+            return SEES_NOTHING; //Error has occured
         }
         for (int i = 0; i < 4; i++){
             if (validMovement(ghost_x, ghost_y, allDirns[i])==0){
                 drnCount++;
-                //printf("Valid direction is: %c", allDirns[i]);
                 possibleDirns = realloc(possibleDirns, drnCount* sizeof(char)); //Adding
                 possibleDirns[drnCount-1] = allDirns[i];
 
             }
         }
         if (drnCount == 0)
-            return 'z';
+            return direction;
         randDirn = rand() % drnCount; //Creating the random direction
         direction = possibleDirns[randDirn]; //setting the direction
 

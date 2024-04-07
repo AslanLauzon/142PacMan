@@ -23,6 +23,7 @@ int move_actor(int *y, int *x, char direction, int eat_dots){
 
     //declaring variables, includes converted x and y cords into an idx and the direction vector and the new cords after movement
     int actorIdx = cordIdxCvt(*x, *y);
+
     //printf("\nORIGINAL IDX:%d", actorIdx);
     int newActorCords;
     int tempX;
@@ -66,12 +67,16 @@ int move_actor(int *y, int *x, char direction, int eat_dots){
         return MOVED_WALL;
     }
 
+    //
+
+    if (eat_dots == 1 && dot_map[cordIdxCvt(tempX, tempY)]== '.') {
+        dotCount--;
+    }
         //if it is a valid position (contains no walls) then it moves the actor and updates all the corresponding variables.
 
-    if (eat_dots == 1 && dot_map[actorIdx] == '.') {
+    if (eat_dots == 1 && dot_map[actorIdx]== '.') {
+
         dot_map[actorIdx] = ' ';
-        dotCount--;
-        printf("In function %d", dotCount);
     }
     map[actorIdx] = dot_map[actorIdx];
     //printf("\nNEW CORDS (%d, %d) IDX: %d", tempX, tempY,cordIdxCvt(tempX, tempY));
@@ -128,8 +133,10 @@ int validMovement (int x, int y, char direction){
 
 }
 
-char * load_map(char * filename, int *map_height, int *map_width) {
+char * load_map(char * filename, int *map_height, int *map_width){
+
     int dotIndex = 0; //used for testing
+    height = 1, width = 0;
     FILE *fMap = NULL;
     fMap = fopen(filename, "r");
     if (fMap == NULL) { //If the map file is not available
@@ -152,28 +159,44 @@ char * load_map(char * filename, int *map_height, int *map_width) {
         free(pHold);
         return NULL; //indicating error has occured
     }
+    char ch;
+    int xCount;
+    while((ch = fgetc(fMap)) != EOF){
+        if(ch == '\n'){
+            height++; // Increment height for each new line.
+            xCount = 0; // Reset element count for the new line.
+        }
+        else if(ch != EMPTY && height == 1) {
+            width++; // Increment width for each character in the first line.
+            xCount++;
+        }
+    }
+
+    rewind(fMap);
+    int tempChange;
 
 
     //Getting the real map
-    for (int i = 0; i < (*map_height); i++){
+    for (int i = 0; i < height; i++){
         //Loading the map
-//
-        for (int j = 0; j < *map_width; j++){
-            fscanf(fMap, "%c", &pHold[0]); // Getting the value from the with a holding value
-            if (i*height+j >= width*height)
-                return NULL;
-            if (pHold[0]== '\n'){
-                fscanf(fMap, "%c", &pMap[i*height+j]); //The next value will be valid and can be taken
-            }
-            else if (pHold[0]==' '){
-                fscanf(fMap, "%c", &pHold[0]); //Spaces will be in twos therefor second must be taken
-                fscanf(fMap, "%c", &pMap[i*(height)+j]); //This will be valid
-            }
-            else{
-                pMap[i*(height)+j] = pHold[0]; //If the hold passes the condition, pMap can be made that
-            }
 
-        } //Goes through 9 reps
+            for (int j = 0; j < width; j++){
+                tempChange = 0;
+
+                while (tempChange == 0){
+
+                    fscanf(fMap, "%c", &pHold[0]); // Getting the value from the with a holding value
+                    printf("%c", pHold);
+//                    if (pHold[0]== '\n'){
+//                        fscanf(fMap, "%c", &pMap[i*height+j]); //The next value will be valid and can be taken
+//                    }
+                    if (pHold[0] !=' ' && pHold[0] != '\n') {
+                        pMap[i * (height) + j] = pHold[0]; //If the hold passes the condition, pMap can be made that
+                        tempChange = 1;
+                    }
+                }
+                printf("%c", pMap[i * (height) + j]);
+            }
 
     }
     *map_width = width;
